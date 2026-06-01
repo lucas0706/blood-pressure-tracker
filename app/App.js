@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ActivityIndicator, View } from 'react-native';
-import { initializeDatabase } from '../services/DatabaseService';
+import { initializeDatabase, getPreferencia } from '../services/DatabaseService';
 import HomeScreen from '../screens/HomeScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import ReportsScreen from '../screens/ReportsScreen';
@@ -66,6 +66,11 @@ export default function App() {
     const initApp = async () => {
       try {
         await initializeDatabase();
+        
+        // Verificar si la autenticación biométrica está habilitada
+        const biometricEnabled = await getPreferencia('biometric_enabled', 'false');
+        setIsBiometricEnabled(biometricEnabled === 'true');
+        
         setIsLoading(false);
       } catch (error) {
         console.error('Error initializing app:', error);
